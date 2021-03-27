@@ -23,7 +23,6 @@ app.post("/", function(req,res){
       const temp_c = weatherData.current.temp_c;
       const wind_kph = weatherData.current.wind_kph;
       const wind_mph = weatherData.current.wind_mph;
-
       const icon =  weatherData.current.condition.icon;
       
       res.write("<p>Wind speed in KPH is " + wind_kph + ", which is " + wind_mph + " in MPH.</p>");
