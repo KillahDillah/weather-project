@@ -1,10 +1,18 @@
 const express = require("express");
 const https = require("https"); // native way to make API requests
+const bodyParser = require("body-parser");  // pkg to look through the body of request and fetch data based on the name of input
 
 const app = express();
 
+app.use(bodyParser.urlencoded({extended:true}));
+
 app.get("/", function(req, res){
-  const locationQuery = 89135;
+  res.sendFile(__dirname + '/index.html');
+})
+
+app.post("/", function(req,res){ 
+
+  const locationQuery = req.body.location;
   const apiKey = "14b16247a3ae4236b0e220244212603";
   const url = "https://api.weatherapi.com/v1/current.json?key=" + apiKey + "&q=" + locationQuery + "&aqi=yes";
   https.get(url, function(response){
@@ -19,16 +27,13 @@ app.get("/", function(req, res){
       const icon =  weatherData.current.condition.icon;
       
       res.write("<p>Wind speed in KPH is " + wind_kph + ", which is " + wind_mph + " in MPH.</p>");
-      res.write("<p>The temperature in Celsius is "+ temp_c + ". Which is " + temp_f + " in Fahrenheit.</p>");
+      res.write("<p>The temperature in <b>" + locationQuery + "</b> Celsius is "+ temp_c + ". Which is " + temp_f + " in Fahrenheit.</p>");
       res.write("<img src='" + icon + "' />");
       // can only have 1 'res.send' - use 'res.write' to write multiple
       res.send();
     })  
   })
-
-  // res.send("Server up and running")
 })
-
 
 
 app.listen(3000, function(){
